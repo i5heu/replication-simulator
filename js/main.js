@@ -39,7 +39,8 @@ fetch('https://cdn.jsdelivr.net/npm/monaco-themes@0.3.3/themes/Monokai.json')
         monaco.editor.setTheme('monokai');
     })
 
-var myWorker = new Worker('js/worker.js');
+const myWorker = new Worker('js/worker.js');
+const canvasWorker = new Worker('js/canvasWorker.js');
 
 myWorker.onmessage = function (oEvent) {
     const data = oEvent.data;
@@ -47,32 +48,22 @@ myWorker.onmessage = function (oEvent) {
     ge("nodes").innerText = data.nodes;
     ge("lastNewDataDuration").innerText = data.lastNewDataDuration;
     if (data.referenceStorage) ge("newData").innerText = data.referenceStorage.length;
-    generateStorageOverview(data.storage, data.referenceStorage);
+
+    canvasWorker.postMessage({ ...data, mode: "data" });
 };
 
-function generateStorageOverview(storage, referenceStorage) {
-    if(!storage) return;
+canvasWorker.onmessage = function (oEvent) {
+    const data = oEvent.data;
+    generateStorageOverview(data.storage, data.referenceStorage);
 
-    const host = document.createElement("div");
-    host.className = "host";
+}
 
-    for (let i = 0; i < storage.length; i++) {
-        const {id: nodeId, store: nodeStorage} = storage[i];
+async function generateStorageOverview(storage, referenceStorage) {
+    if (!storage) return;
 
-        const nodeHost = document.createElement("div");
-        nodeHost.className = "nodeHost";
+    const img = document.createElement("img");
 
-        for (const data of referenceStorage) {
-            const dataEl = document.createElement("div");
-            if(nodeStorage.indexOf(data) == -1) dataEl.className = "notFound";
-            
-            nodeHost.appendChild(dataEl);
-        }
-        host.appendChild(nodeHost);
-    }
-    
-    ge("nodeGraph").innerHTML = "";
-    ge("nodeGraph").appendChild(host);
+    ge("nodeGraph").appendChild(img);
 }
 
 

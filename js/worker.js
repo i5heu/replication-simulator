@@ -22,7 +22,7 @@ function sendUpdates() {
         lastNewDataDuration,
     });
 
-    setTimeout(sendUpdates, 3000);
+    setTimeout(sendUpdates, 100);
 }
 sendUpdates();
 
@@ -37,7 +37,6 @@ function getAllStorages(){
 }
 
 onmessage = function (oEvent) {
-
     switch (oEvent.data.mode) {
         case "newFunction":
             maxMessageCounter = oEvent.data.maxMessages;
