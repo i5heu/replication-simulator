@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 
@@ -28,9 +29,38 @@
 <body>
     <h1>Replication Simulator</h1>
     <div id="editor"></div>
+    <div id="dashboard">
+        <Button onclick="buildAndRun()">Build and Run</Button>
+        <label>Nodes
+            <input type="number" id="setNodes" value="20">
+        </label>
+        <label>New Data interval
+            <input type="number" id="setNewData" value="1000">ms
+        </label>
+        <label>Max Messages
+            <input type="number" id="setMaxMessages" value="200000">k
+        </label>
+        <label>Chaos
+            <input type="number" id="setChaos" value="100">
+        </label>
+        <hr>
+        <div id="error"></div>
+        <div>
+            Nodes: <span id="nodes">0</span>
+        </div>
+        <div>
+            Messages: <span id="messages">0</span>
+        </div>
+        <div>
+            NewData Duration: <span id="lastNewDataDuration">0</span>ms
+        </div>
+        <div>
+            NewData created: <span id="newData">0</span>
+        </div>
 
-
-    <script src="js/main.js"></script>
+        <div id="nodeGraph"></div>
+    </div>
 </body>
+<script src="js/main.js"></script>
 
 </html>
