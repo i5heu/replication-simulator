@@ -1,0 +1,10 @@
+html {
+    background-color: black;
+    color: chartreuse;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#editor {
+    height: 500px;
+    width: 50%;
+}
