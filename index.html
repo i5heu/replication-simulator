@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="author" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css"
+        integrity="sha256-WAgYcAck1C1/zEl5sBl5cfyhxtLgKGdpI3oKyJffVRI=" crossorigin="anonymous">
+    <script>var require = { paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.21.3/min/vs' } };</script>
+
+    <link rel="stylesheet" data-name="vs/editor/editor.main"
+        href="https://cdn.jsdelivr.net/npm/monaco-editor@0.21.3/min/vs/editor/editor.main.css"
+        integrity="sha256-HUotQB5EyhP6cE/6a8K6QqVC891PehbapOgW2WRAavU=" crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/monaco-themes@0.3.3/dist/monaco-themes.js"
+        integrity="sha256-5tRXZ44slhN/2iTc7vLrqCq12p9+La/+Te/+hJYTQxU=" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.21.3/min/vs/loader.js"
+        integrity="sha256-iZe713J7Cgsj+8to+KOmDhnb/e1IfvvkrGY/4wz80js=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.21.3/min/vs/editor/editor.main.nls.js"
+        integrity="sha256-pDXGIXk79gBWvnzogrE6+M03BBKhZmEejW5+uZd2p0I=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.21.3/min/vs/editor/editor.main.js"
+        integrity="sha256-YU9ODb2hd/b6mgC4q1U+HjbStMaKLv0Q5EF7PrZW/BQ=" crossorigin="anonymous"></script>
+
+    <link href="css/main.css" rel="stylesheet">
+</head>
+
+<body>
+    <main>
+
+
+        <h1>Replication Simulator</h1>
+        <div id="editor"></div>
+        <div id="dashboard">
+            <Button onclick="buildAndRun()">Build and Run</Button>
+            <Button onclick="stop()">Stop</Button>
+            <label>Nodes
+                <input type="number" id="setNodes" value="50">
+            </label>
+            <label>New Data interval
+                <input type="number" id="setNewData" value="100">ms
+            </label>
+            <label>Max Data
+                <input type="number" id="setMaxData" value="50">
+            </label>
+            <label>Max Messages
+                <input type="number" id="setMaxMessages" value="2000">k
+            </label>
+            <label>Cooldown for SendMessage
+                <input type="number" id="sendMessageCooldown" value="9">ms
+            </label>
+            <label>Chaos
+                <input type="number" id="setChaos" value="100">
+            </label>
+            <hr>
+            <div id="error"></div>
+            <div>
+                Nodes: <span id="nodes">0</span>
+            </div>
+            <div>
+                Messages: <span id="messages">0</span>
+            </div>
+            <div>
+                NewData Duration: <span id="lastNewDataDuration">0</span>ms
+            </div>
+            <div>
+                NewData created: <span id="newData">0</span>
+            </div>
+            <div>
+                Matrix Size: <span id="matrixSize">0</span>
+            </div>
+
+            <div id="nodeGraph">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+    </main>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
