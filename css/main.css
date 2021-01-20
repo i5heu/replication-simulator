@@ -38,3 +38,9 @@ label {
     margin: 3px;
     padding: 3px;
 }
+
+#nodeGraph {
+    max-height: 550px;
+    overflow: auto;
+    padding: 10px;
+}

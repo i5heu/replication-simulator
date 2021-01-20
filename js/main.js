@@ -16,19 +16,16 @@ const editor = monaco.editor.create(document.getElementById("editor"), {
         this.seedIds = seedIds;
     }
 
-    receiveMessage(message) {
-
-    }
-
-    sendMessage() {
+    receiveMessage(senderId, message) {
 
     }
 
     newData(data) {
         this.dataCheck.push(data)
+        //sendData(this.seedIds.A, {id: this.ownId,data});
     }
-}    
-    `,
+}
+`,
     language: "javascript"
 });
 
@@ -54,16 +51,17 @@ myWorker.onmessage = function (oEvent) {
 
 canvasWorker.onmessage = function (oEvent) {
     const data = oEvent.data;
-    generateStorageOverview(data.storage, data.referenceStorage);
 
-}
+    ge("matrixSize").innerText = data.imageData.length;
 
-async function generateStorageOverview(storage, referenceStorage) {
-    if (!storage) return;
-
-    const img = document.createElement("img");
-
-    ge("nodeGraph").appendChild(img);
+    const canvas = ge("canvas");
+    ctx = canvas.getContext("2d");
+    canvas.height = data.height;
+    canvas.width = data.width;
+    console.log(data.height);
+    const imageData = ctx.createImageData(data.width, data.height);
+    imageData.data.set(data.imageData);
+    ctx.putImageData(imageData, 0, 0);
 }
 
 
@@ -108,6 +106,7 @@ function buildAndRun() {
         nodes: parseInt(ge("setNodes").value),
         chaos: parseInt(ge("setChaos").value),
         newDataInterval: parseInt(ge("setNewData").value),
+        setMaxData: parseInt(ge("setMaxData").value),
         text: "return " + text
     });
 }

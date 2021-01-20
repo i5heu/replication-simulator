@@ -10,10 +10,11 @@ let nodes = [];
 let nodeIdToIndexId = [];
 let referenceStorage = [];
 let lastNewDataDuration = 0;
+let setMaxData = 500;
 
 function sendUpdates() {
     postMessage({
-        mode:"update",
+        mode: "update",
         "nodes": nodes.length,
         messageCounter,
         storage: getAllStorages(),
@@ -22,15 +23,15 @@ function sendUpdates() {
         lastNewDataDuration,
     });
 
-    setTimeout(sendUpdates, 100);
+    setTimeout(sendUpdates, 250);
 }
 sendUpdates();
 
-function getAllStorages(){
+function getAllStorages() {
     const storage = []
     for (const nodeIndex in nodes) {
         const node = nodes[nodeIndex];
-        storage.push({id: nodeIdToIndexId[nodeIndex] ,store: node.dataCheck})
+        storage.push(node.dataCheck)
     }
 
     return storage;
@@ -43,6 +44,7 @@ onmessage = function (oEvent) {
             maxNodes = oEvent.data.nodes;
             chaos = oEvent.data.chaos;
             newDataInterval = oEvent.data.newDataInterval;
+            setMaxData = oEvent.data.setMaxData;
             newFunction(oEvent.data.text);
             break;
 
@@ -61,38 +63,48 @@ function start() {
     lastNewDataDuration = 0;
 
     generateNodes();
-    insertRandomData(0, nodes, storage);
+    insertRandomData();
 }
 
 function generateNodes() {
+    const seeds = {
+        "A": 1,
+        "B": 2,
+        "C": 3,
+    }
     for (let i = 0; i < maxNodes; i++) {
         nodeIdToIndexId[i] = getRndInteger(0, 999999999);
 
         nodes[i] = new repClass(
             nodeIdToIndexId[i],
-            [nodeIdToIndexId[1], nodeIdToIndexId[2], nodeIdToIndexId[3]],
+            seeds,
         );
     }
+
+    seeds.A = nodeIdToIndexId[1];
+    seeds.B = nodeIdToIndexId[2];
+    seeds.C = nodeIdToIndexId[3];
 }
 
-async function insertRandomData(i) {
+async function insertRandomData() {
     const start = performance.now();
-
-    if(stop) return
+    if (stop) return
     if (messageCounter > maxMessageCounter) return;
+    if (setMaxData <= referenceStorage.length) return;
+
     messageCounter++;
     const randNode = getRndInteger(0, nodes.length - 1);
 
-    
+
     //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
     const randData = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    
+
     referenceStorage.push(randData);
     nodes[randNode].newData(randData);
 
     const end = performance.now();
     lastNewDataDuration = end - start;
-    setTimeout(insertRandomData.bind(i + 1), newDataInterval);
+    setTimeout(insertRandomData, newDataInterval);
 }
 
 function newFunction(text) {

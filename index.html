@@ -37,13 +37,16 @@
         <div id="dashboard">
             <Button onclick="buildAndRun()">Build and Run</Button>
             <label>Nodes
-                <input type="number" id="setNodes" value="20">
+                <input type="number" id="setNodes" value="10">
             </label>
             <label>New Data interval
-                <input type="number" id="setNewData" value="1000">ms
+                <input type="number" id="setNewData" value="250">ms
+            </label>
+            <label>Max Data
+                <input type="number" id="setMaxData" value="500">
             </label>
             <label>Max Messages
-                <input type="number" id="setMaxMessages" value="200000">k
+                <input type="number" id="setMaxMessages" value="2000">k
             </label>
             <label>Chaos
                 <input type="number" id="setChaos" value="100">
@@ -61,6 +64,9 @@
             </div>
             <div>
                 NewData created: <span id="newData">0</span>
+            </div>
+            <div>
+                Matrix Size: <span id="matrixSize">0</span>
             </div>
 
             <div id="nodeGraph">
