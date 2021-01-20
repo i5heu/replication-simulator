@@ -15,21 +15,35 @@ main {
     display: grid;
     grid-template-rows: 40px auto;
     grid-template-columns: 1fr 1fr;
+    grid-row-gap: dense;
     gap: 10px;
     padding: 10px;
     box-sizing: border-box;
 }
 
-h1 {
-    margin: 0;
-    font-size: 30px;
-}
-
 #editor,
 #dashboard {
     position: relative;
-    grid-row: 2;
     box-sizing: border-box;
+    grid-row: 2;
+}
+
+@media only screen and (max-width: 1050px) {
+    main {
+        grid-template-rows: 40px minmax(400px, auto) minmax(400px, auto);
+        grid-template-columns: 1fr;
+    }
+
+    #editor {
+        grid-row: 2;
+    }
+    #dashboard {
+        grid-row: 3;
+    }
+}
+h1 {
+    margin: 0;
+    font-size: 30px;
 }
 
 label {
