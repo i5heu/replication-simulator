@@ -8,23 +8,51 @@ const editor = monaco.editor.create(document.getElementById("editor"), {
     seedIds // the ids of the first 3 nodes is known [123,1234,12345] ids are random!
     dataCheck = []; //will be used to check if the data exists in the node, must be an array with the data as value
 
+    queue = [];
+    queuePosition = 0;
+    nodeList = [];
+
     constructor(
         ownId,
         seedIds
-        ) {
+    ) {
         this.ownId = ownId;
         this.seedIds = seedIds;
+        this.workOnQueue();
+    }
+
+    workOnQueue() {
+        if (this.queue.length > this.queuePosition + 1) {
+
+            const answer = sendData(
+                this, this.queue[this.queuePosition + 1].receiver,
+                this.queue[this.queuePosition + 1].data
+            );
+
+            if (answer) this.queuePosition++;
+        }
+
+        setTimeout(this.workOnQueue.bind(this), 10);
     }
 
     receiveMessage(senderId, message) {
+        if(message.id != this.ownId && this.nodeList.indexOf(message.id) == -1 ) 
+            this.nodeList.push(message.id);
 
+        if(this.dataCheck.indexOf(message.data) !== -1) return;
+
+        this.dataCheck.push(message.data);
+
+        for (const node of this.nodeList) {
+            this.queue.push({ receiver: node, data: message });
+        }
     }
 
     newData(data) {
         this.dataCheck.push(data)
-        //sendData(this.seedIds.A, {id: this.ownId,data});
+        sendData(this, this.seedIds.A, { id: this.ownId, data });
     }
-}
+}                                        
 `,
     language: "javascript"
 });
@@ -58,7 +86,6 @@ canvasWorker.onmessage = function (oEvent) {
     ctx = canvas.getContext("2d");
     canvas.height = data.height;
     canvas.width = data.width;
-    console.log(data.height);
     const imageData = ctx.createImageData(data.width, data.height);
     imageData.data.set(data.imageData);
     ctx.putImageData(imageData, 0, 0);
@@ -107,6 +134,13 @@ function buildAndRun() {
         chaos: parseInt(ge("setChaos").value),
         newDataInterval: parseInt(ge("setNewData").value),
         setMaxData: parseInt(ge("setMaxData").value),
+        sendMessageCooldown: parseInt(ge("sendMessageCooldown").value),
         text: "return " + text
+    });
+}
+
+function stop() {
+    myWorker.postMessage({
+        mode: "stop",
     });
 }

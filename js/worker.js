@@ -11,6 +11,7 @@ let nodeIdToIndexId = [];
 let referenceStorage = [];
 let lastNewDataDuration = 0;
 let setMaxData = 500;
+let sendMessageCooldown = 333;
 
 function sendUpdates() {
     postMessage({
@@ -45,9 +46,13 @@ onmessage = function (oEvent) {
             chaos = oEvent.data.chaos;
             newDataInterval = oEvent.data.newDataInterval;
             setMaxData = oEvent.data.setMaxData;
+            sendMessageCooldown = oEvent.data.sendMessageCooldown;
             newFunction(oEvent.data.text);
             break;
-
+        case "stop":
+            this.stop = true;
+            console.log("STOP");
+            break;
         default:
             break;
     }
@@ -88,7 +93,7 @@ function generateNodes() {
 
 async function insertRandomData() {
     const start = performance.now();
-    if (stop) return
+    if (this.stop) return
     if (messageCounter > maxMessageCounter) return;
     if (setMaxData <= referenceStorage.length) return;
 
@@ -108,7 +113,7 @@ async function insertRandomData() {
 }
 
 function newFunction(text) {
-    stop = true;
+    this.stop = false;
 
     const repFunction = new Function(text);
 
@@ -120,4 +125,23 @@ function newFunction(text) {
 
 function getRndInteger(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+//nodeMessaging functions
+const sendActive = [];
+
+function sendData($this, receiverId, message) {
+    if (this.stop || sendActive[$this.ownId]) return false;
+    if(messageCounter > maxMessageCounter) return false;
+
+    messageCounter++;
+    sendActive[$this.ownId] = true;
+    
+    setTimeout(() => {
+        nodes[nodeIdToIndexId.indexOf(receiverId)].receiveMessage($this.ownId, message);
+
+        sendActive[$this.ownId] = false;
+    }, sendMessageCooldown);
+
+    return true;
 }

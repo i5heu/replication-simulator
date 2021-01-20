@@ -44,3 +44,6 @@ label {
     overflow: auto;
     padding: 10px;
 }
+#nodeGraph > canvas {
+    min-width: 400px;
+}

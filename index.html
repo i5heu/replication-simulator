@@ -36,17 +36,21 @@
         <div id="editor"></div>
         <div id="dashboard">
             <Button onclick="buildAndRun()">Build and Run</Button>
+            <Button onclick="stop()">Stop</Button>
             <label>Nodes
-                <input type="number" id="setNodes" value="10">
+                <input type="number" id="setNodes" value="50">
             </label>
             <label>New Data interval
-                <input type="number" id="setNewData" value="250">ms
+                <input type="number" id="setNewData" value="100">ms
             </label>
             <label>Max Data
-                <input type="number" id="setMaxData" value="500">
+                <input type="number" id="setMaxData" value="50">
             </label>
             <label>Max Messages
                 <input type="number" id="setMaxMessages" value="2000">k
+            </label>
+            <label>Cooldown for SendMessage
+                <input type="number" id="sendMessageCooldown" value="9">ms
             </label>
             <label>Chaos
                 <input type="number" id="setChaos" value="100">
