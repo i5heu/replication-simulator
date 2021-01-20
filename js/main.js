@@ -50,7 +50,12 @@ const editor = monaco.editor.create(document.getElementById("editor"), {
 
     newData(data) {
         this.dataCheck.push(data)
-        sendData(this, this.seedIds.A, { id: this.ownId, data });
+        const result = sendData(this, this.seedIds.A, { id: this.ownId, data });
+        if(!result) {
+            this.queue.push({ receiver: this.seedIds.A, data: { id: this.ownId, data } });
+            this.queue.push({ receiver: this.seedIds.B, data: { id: this.ownId, data } });
+            this.queue.push({ receiver: this.seedIds.C, data: { id: this.ownId, data } });
+        }
     }
 }                                        
 `,
